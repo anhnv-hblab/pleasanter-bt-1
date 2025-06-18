@@ -1,0 +1,255 @@
+﻿{
+  "HeaderInfo": {
+    "AssemblyVersion": "1.4.14.0",
+    "BaseSiteId": 19,
+    "Server": "http://localhost:50001",
+    "CreatorName": "Administrator",
+    "PackageTime": "2025-06-18T07:48:43.6050219+00:00",
+    "Convertors": [
+      {
+        "SiteId": 19,
+        "SiteTitle": "BT",
+        "ReferenceType": "Sites",
+        "IncludeData": true,
+        "Order": "[]"
+      },
+      {
+        "SiteId": 20,
+        "SiteTitle": "MasterPref",
+        "ReferenceType": "Results",
+        "IncludeData": true
+      },
+      {
+        "SiteId": 21,
+        "SiteTitle": "Logs",
+        "ReferenceType": "Results",
+        "IncludeData": true
+      }
+    ],
+    "IncludeSitePermission": true,
+    "IncludeRecordPermission": true,
+    "IncludeColumnPermission": true,
+    "IncludeNotifications": true,
+    "IncludeReminders": true
+  },
+  "Sites": [
+    {
+      "TenantId": 1,
+      "SiteId": 19,
+      "Title": "BT",
+      "SiteName": "",
+      "SiteGroupName": "",
+      "Body": "",
+      "GridGuide": "",
+      "EditorGuide": "",
+      "CalendarGuide": "",
+      "CrosstabGuide": "",
+      "GanttGuide": "",
+      "BurnDownGuide": "",
+      "TimeSeriesGuide": "",
+      "AnalyGuide": "",
+      "KambanGuide": "",
+      "ImageLibGuide": "",
+      "ReferenceType": "Sites",
+      "ParentId": 0,
+      "InheritPermission": 19,
+      "SiteSettings": {
+        "Version": 1.017,
+        "ReferenceType": "Sites",
+        "NoDisplayIfReadOnly": false,
+        "NotInheritPermissionsWhenCreatingSite": false
+      },
+      "Publish": false,
+      "DisableCrossSearch": false,
+      "Comments": []
+    },
+    {
+      "TenantId": 1,
+      "SiteId": 20,
+      "Title": "MasterPref",
+      "SiteName": "",
+      "SiteGroupName": "",
+      "Body": "",
+      "GridGuide": "",
+      "EditorGuide": "",
+      "CalendarGuide": "",
+      "CrosstabGuide": "",
+      "GanttGuide": "",
+      "BurnDownGuide": "",
+      "TimeSeriesGuide": "",
+      "AnalyGuide": "",
+      "KambanGuide": "",
+      "ImageLibGuide": "",
+      "ReferenceType": "Results",
+      "ParentId": 19,
+      "InheritPermission": 19,
+      "SiteSettings": {
+        "Version": 1.017,
+        "ReferenceType": "Results",
+        "GridColumns": [
+          "ResultId",
+          "ClassA",
+          "ClassB",
+          "ClassC",
+          "ClassD",
+          "ClassE",
+          "NumA",
+          "NumB",
+          "NumC",
+          "NumD"
+        ],
+        "EditorColumnHash": {
+          "General": [
+            "ResultId",
+            "ClassA",
+            "ClassB",
+            "ClassC",
+            "ClassD",
+            "ClassE",
+            "NumA",
+            "NumB",
+            "NumC",
+            "NumD"
+          ]
+        },
+        "Columns": [
+          {
+            "ColumnName": "ClassA",
+            "LabelText": "City"
+          },
+          {
+            "ColumnName": "ClassB",
+            "LabelText": "Country"
+          },
+          {
+            "ColumnName": "ClassC",
+            "LabelText": "Iso2"
+          },
+          {
+            "ColumnName": "ClassD",
+            "LabelText": "AdminName"
+          },
+          {
+            "ColumnName": "ClassE",
+            "LabelText": "Capital"
+          },
+          {
+            "ColumnName": "NumA",
+            "LabelText": "Lot"
+          },
+          {
+            "ColumnName": "NumB",
+            "LabelText": "Ing"
+          },
+          {
+            "ColumnName": "NumC",
+            "LabelText": "Population"
+          },
+          {
+            "ColumnName": "NumD",
+            "LabelText": "PopulationProper"
+          }
+        ],
+        "Scripts": [
+          {
+            "Title": "JS",
+            "All": true,
+            "Body": "$p.events.on_grid_load = function() {\n    // Tạo nút Import Data From API\n    $(\"#MainCommands\").append(\n        $('<button id=\"button-exe\" class=\"button button-icon button-neutral ui-button ui-corner-all ui-widget applied\" type=\"button\" accesskey=\"\" onclick=\"$p.send($(this))\" data-icon=\"ui-icon-circle-arrow-w\" data-action=\"GridRows\" data-method=\"post\"><span class=\"ui-button-icon-space\"> </span>Import Data From API</button>')\n    );\n\n    $('#button-exe').on('click', async function () {\n        try {\n            const response = await fetch('https://raw.githubusercontent.com/anhnv-hblab/pleasanter-bt-1/main/data.json');\n            const data = await response.json();\n\n            for (const item of data) {\n                $p.apiCreate({\n                    id: 93,\n                    data: {\n                        ClassHash: {\n                            ClassA: item.city,\n                            NumA: item.lot,\n                            NumB: item.lng,\n                            ClassB: item.country,\n                            ClassC: item.iso2,\n                            ClassD: item.admin_name,\n                            ClassE: item.capital,\n                            NumC: item.population,\n                            NumD: item.population_proper\n                        }\n                    },\n                    done: function (item) {\n                        const message = {\n                            Css: 'alert-success',\n                            Text: 'A new record was created'\n                        };\n                        // $p.setMessage('#Message',JSON.stringify(item));\n                    },\n                    fail: function (item) {\n                    }\n                });\n            }\n\n\n            $p.apiGet({\n                id: 93,\n                data: {\n                    View: {\n                        ApiDataType: \"KeyValues\"\n                    }\n                },\n                done: function (data) {\n                    console.log(data);\n                }\n            });\n\n            location.reload();\n\n        } catch (err) {\n            console.error(\"Lỗi khi gọi API:\", err);\n        }\n    });\n}",
+            "Id": 1
+          }
+        ],
+        "NoDisplayIfReadOnly": false,
+        "NotInheritPermissionsWhenCreatingSite": false
+      },
+      "Publish": false,
+      "DisableCrossSearch": false,
+      "Comments": []
+    },
+    {
+      "TenantId": 1,
+      "SiteId": 21,
+      "Title": "Logs",
+      "SiteName": "",
+      "SiteGroupName": "",
+      "Body": "",
+      "GridGuide": "",
+      "EditorGuide": "",
+      "CalendarGuide": "",
+      "CrosstabGuide": "",
+      "GanttGuide": "",
+      "BurnDownGuide": "",
+      "TimeSeriesGuide": "",
+      "AnalyGuide": "",
+      "KambanGuide": "",
+      "ImageLibGuide": "",
+      "ReferenceType": "Results",
+      "ParentId": 19,
+      "InheritPermission": 19,
+      "SiteSettings": {
+        "Version": 1.017,
+        "ReferenceType": "Results",
+        "GridColumns": [
+          "ResultId",
+          "DescriptionA",
+          "DateA"
+        ],
+        "EditorColumnHash": {
+          "General": [
+            "ResultId",
+            "DescriptionA",
+            "DateA"
+          ]
+        },
+        "Columns": [
+          {
+            "ColumnName": "DateA",
+            "LabelText": "Created_at",
+            "EditorFormat": "Ymdhms"
+          },
+          {
+            "ColumnName": "DescriptionA",
+            "LabelText": "Description"
+          }
+        ],
+        "NoDisplayIfReadOnly": false,
+        "NotInheritPermissionsWhenCreatingSite": false
+      },
+      "Publish": false,
+      "DisableCrossSearch": false,
+      "Comments": []
+    }
+  ],
+  "Data": [],
+  "Permissions": [
+    {
+      "SiteId": 19,
+      "Permissions": [
+        {
+          "ReferenceId": 19,
+          "DeptId": 0,
+          "GroupId": 0,
+          "UserId": 1,
+          "PermissionType": 511
+        }
+      ]
+    },
+    {
+      "SiteId": 20,
+      "Permissions": []
+    },
+    {
+      "SiteId": 21,
+      "Permissions": []
+    }
+  ],
+  "PermissionIdList": {
+    "DeptIdList": [],
+    "GroupIdList": [],
+    "UserIdList": [
+      {
+        "UserId": 1,
+        "LoginId": "Administrator"
+      }
+    ]
+  }
+}
