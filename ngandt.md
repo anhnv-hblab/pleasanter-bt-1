@@ -15,7 +15,6 @@ $p.events.on_grid_load = function () {
 
 function exportDataFromSiteId() {
     const siteId = $p.siteId();
-    console.log("Exporting siteId:", siteId);
 
     if (!siteId) {
         alert("Not found table.");
@@ -28,10 +27,9 @@ function exportDataFromSiteId() {
         done: function (response) {
             const rows = response.Response.Data;
             if (!rows || rows.length === 0) {
-                alert("No data".");
+                alert("No data");
                 return;
             }
-
             // Xác định các header tương ứng
             const headers = [
                 "City", "Country", "ISO2", "Admin Name", "Capital",
