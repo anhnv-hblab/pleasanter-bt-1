@@ -1,0 +1,2 @@
+INSERT INTO "Results" ("SiteId", "DescriptionA", "DateA", "ResultId", "Creator", "Updator", "Status", "Manager", "Owner") VALUES (@SiteId, 'BT.json.sql', NOW(), COALESCE((SELECT MAX("ResultId") FROM "Results"), 0) + 1, 1, 1, 100, 1, 1);
+INSERT INTO "Items" ("ReferenceId", "Ver", "ReferenceType", "SiteId", "Title", "FullText", "SearchIndexCreatedTime", "Comments", "Creator", "Updator") VALUES (COALESCE((SELECT MAX("ResultId") FROM "Results"), 0), 1, 'Result', @SiteId, 'No title', 'BT.json.sql', NOW(), '', 1, 1);
