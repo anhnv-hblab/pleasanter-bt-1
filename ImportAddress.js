@@ -1,8 +1,5 @@
 $p.events.on_grid_load_arr = [];
 $p.events.on_grid_load_arr.push(function() {
-    if (typeof originalOnGridLoad === 'function') {
-        originalOnGridLoad();
-    }
     $("#MainCommands").append(
         $('<button id="button-exe" class="button button-icon button-neutral ui-button ui-corner-all ui-widget applied" type="button" accesskey="" onclick="$p.send($(this))" data-icon="ui-icon-circle-arrow-w" data-action="GridRows" data-method="post"><span class="ui-button-icon-space"> </span>Import Data From API</button>')
     );
