@@ -28,7 +28,7 @@ $('#button-chart').on('click', async function () {
 
             try {
                 const res = await $p.apiGet({
-                    id: 2,
+                    id: $p.siteId(),
                     data: {
                         View: {
                             ApiDataType: "KeyValues"
