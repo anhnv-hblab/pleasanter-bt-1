@@ -1,0 +1,4 @@
+[id$="ColumnsWrapper"] ol li::after {
+    content: " (" attr(data-value) ")";
+    color: gray;
+}
