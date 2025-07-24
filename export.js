@@ -1,3 +1,4 @@
+console.log('Load export.js');
 $p.events.on_grid_load_arr.push(function() {
     $("#MainCommands").append(
         $('<button id="button-export" class="button button-icon button-neutral ui-button ui-corner-all ui-widget applied" type="button" onclick="exportDataFromSiteId()" data-icon="ui-icon-circle-arrow-e"><span class="ui-button-icon-space"> </span>Export to Excel</button>')
