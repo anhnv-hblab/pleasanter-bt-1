@@ -20,9 +20,9 @@ $p.events.on_grid_load_arr.push(function() {
 
         // Nếu đang ẩn → hiển thị và vẽ biểu đồ
         if ($('#chart-container').is(':hidden')) {
-            const target = document.getElementById('chart-container');
+            const target = document.getElementById('MainForm');
             if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                target.scrollIntoView({ behavior: 'smooth' });
             }
             $('#chart-container').slideDown(400, async function() {
                 // Xóa biểu đồ cũ nếu có
