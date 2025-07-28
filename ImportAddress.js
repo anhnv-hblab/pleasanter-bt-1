@@ -1,9 +1,16 @@
 $p.events.on_grid_load_arr = [];
+$("#MainContainer").append(`
+    <div id="loading-container" style="display:none;">
+        <div class="spinner"></div>
+        <div style="margin-top:8px; color:#333;"></div>
+    </div>
+`);
 $p.events.on_grid_load_arr.push(function() {
     $("#MainCommands").append(
         $('<button id="button-exe" class="button button-icon button-neutral ui-button ui-corner-all ui-widget applied" type="button" accesskey="" onclick="$p.send($(this))" data-icon="ui-icon-circle-arrow-w" data-action="GridRows" data-method="post"><span class="ui-button-icon-space"> </span>Import Data From API</button>')
     );
     $('#button-exe').on('click', async function() {
+        $('#loading-container').show(); 
         try {
             await new Promise(resolve => setTimeout(resolve, 1000));
             const response = await fetch('https://raw.githubusercontent.com/anhnv-hblab/pleasanter-bt-1/main/data.json');
@@ -33,7 +40,9 @@ $p.events.on_grid_load_arr.push(function() {
                         };
                         // $p.setMessage('#Message',JSON.stringify(item));
                     },
-                    fail: function(item) {}
+                    fail: function(item) {
+                        $('#loading-container').hide();
+                    }
                 });
             }
 
@@ -42,6 +51,7 @@ $p.events.on_grid_load_arr.push(function() {
             }, 300);
 
         } catch (err) {
+            $('#loading-container').hide();
             console.error("Lỗi khi gọi API:", err);
         }
     });
