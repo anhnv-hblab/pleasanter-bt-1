@@ -5,6 +5,7 @@ $p.events.on_grid_load_arr.push(function() {
     );
     $('#button-exe').on('click', async function() {
         try {
+            await new Promise(resolve => setTimeout(resolve, 1000));
             const response = await fetch('https://raw.githubusercontent.com/anhnv-hblab/pleasanter-bt-1/main/data.json');
             const data = await response.json();
 
