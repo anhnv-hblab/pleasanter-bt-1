@@ -20,10 +20,6 @@ $p.events.on_grid_load_arr.push(function() {
 
         // Nếu đang ẩn → hiển thị và vẽ biểu đồ
         if ($('#chart-container').is(':hidden')) {
-            const target = document.getElementById('MainForm');
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth' });
-            }
             $('#chart-container').slideDown(400, async function() {
                 // Xóa biểu đồ cũ nếu có
                 if (window.myChart instanceof Chart) {
@@ -88,6 +84,10 @@ $p.events.on_grid_load_arr.push(function() {
                     console.error("Lỗi lấy dữ liệu hoặc vẽ biểu đồ:", err);
                 }
             });
+            const target = document.getElementById('MainForm');
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
         } else {
             $('#chart-container').slideUp(300);
         }
