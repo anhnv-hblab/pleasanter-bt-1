@@ -1,9 +1,9 @@
 console.log('Load export.js');
-$p.events.on_grid_load_arr.push(function() {
+$p.events.on_grid_load = function () {
     $("#MainCommands").append(
         $('<button id="button-export" class="button button-icon button-neutral ui-button ui-corner-all ui-widget applied" type="button" onclick="exportDataFromSiteId()" data-icon="ui-icon-circle-arrow-e"><span class="ui-button-icon-space"> </span>Export to Excel</button>')
     );
-});
+};
 
 function exportDataFromSiteId() {
     const siteId = $p.siteId();
@@ -13,69 +13,98 @@ function exportDataFromSiteId() {
         return;
     }
 
+    showLoading(true);
+
     // Gọi API và xử lý xuất Excel
     $p.apiGet({
         id: siteId,
-        done: function(response) {
+        done: function (response) {
             const rows = response.Response.Data;
             if (!rows || rows.length === 0) {
                 alert("No data");
+                showLoading(false);
                 return;
             }
-            // Xác định các header tương ứng
-            const headers = [
-                "City", "Country", "ISO2", "Admin Name", "Capital",
-                "Latitude", "Longitude", "Population", "Population Proper"
-            ];
 
-            // Tạo HTML Table từ dữ liệu API
-            let tableHTML = "<table><thead><tr>";
-            headers.forEach(header => {
-                tableHTML += `<th>${header}</th>`;
-            });
-            tableHTML += "</tr></thead><tbody>";
+            // Tạo dữ liệu để xuất Excel
+            const data = rows.map(row => [
+                row.ClassHash.ClassA,  // City
+                row.ClassHash.ClassB,  // Country
+                row.ClassHash.ClassC,  // ISO2
+                row.ClassHash.ClassD,  // Admin Name
+                row.ClassHash.ClassE,  // Capital
+                row.NumHash.NumA,      // Latitude
+                row.NumHash.NumB,      // Longitude
+                row.NumHash.NumC,      // Population
+                row.NumHash.NumD       // Population Proper
+            ]);
 
-            rows.forEach(row => {
-                console.log('fff', row)
-                tableHTML += "<tr>";
-                tableHTML += `<td>${row.ClassHash.ClassA}</td>`; // City
-                tableHTML += `<td>${row.ClassHash.ClassB}</td>`; // Country
-                tableHTML += `<td>${row.ClassHash.ClassC}</td>`; // ISO2
-                tableHTML += `<td>${row.ClassHash.ClassD}</td>`; // Admin Name
-                tableHTML += `<td>${row.ClassHash.ClassE}</td>`; // Capital
-                tableHTML += `<td>${row.NumHash.NumA}</td>`; // Latitude
-                tableHTML += `<td>${row.NumHash.NumB}</td>`; // Longitude
-                tableHTML += `<td>${row.NumHash.NumC}</td>`; // Population
-                tableHTML += `<td>${row.NumHash.NumD}</td>`; // Population Proper
-                tableHTML += "</tr>";
-            });
-
-            tableHTML += "</tbody></table>";
-            exportHTMLTableToExcel(tableHTML);
+            // Xuất Excel
+            exportToExcel(data);
         },
-        fail: function(err) {
+        fail: function (err) {
             console.error("Error data:", err);
             alert("Cannot get data");
+            showLoading(false);
         }
     });
 }
 
-function exportHTMLTableToExcel(tableHTML, filename = 'Pleasanter_Export.xls') {
-    const dataType = 'application/vnd.ms-excel';
-    const downloadLink = document.createElement("a");
+function exportToExcel(data, filename = 'Pleasanter_Export.xlsx') {
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet([
+        ["City", "Country", "ISO2", "Admin Name", "Capital", "Latitude", "Longitude", "Population", "Population Proper"], // Headers
+        ...data
+    ]);
 
-    document.body.appendChild(downloadLink);
+    XLSX.utils.book_append_sheet(wb, ws, "Data");
 
-    if (navigator.msSaveOrOpenBlob) {
-        const blob = new Blob(['\ufeff', tableHTML], {
-            type: dataType
-        });
-        navigator.msSaveOrOpenBlob(blob, filename);
+    XLSX.writeFile(wb, filename);
+    
+    showLoading(false);
+}
+
+function showLoading(isLoading) {
+    const loadingElement = document.getElementById("loading");
+    const overlayElement = document.getElementById("overlay");
+
+    if (isLoading) {
+        if (!overlayElement) {
+            const overlayDiv = document.createElement('div');
+            overlayDiv.id = "overlay";
+            overlayDiv.style.position = "fixed";
+            overlayDiv.style.top = "0";
+            overlayDiv.style.left = "0";
+            overlayDiv.style.width = "100%";
+            overlayDiv.style.height = "100%";
+            overlayDiv.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+            overlayDiv.style.zIndex = "9998";
+            document.body.appendChild(overlayDiv);
+        }
+
+        if (!loadingElement) {
+            const div = document.createElement('div');
+            div.id = "loading";
+            div.style.position = "fixed";
+            div.style.top = "50%";
+            div.style.left = "50%";
+            div.style.transform = "translate(-50%, -50%)";
+            div.style.padding = "20px 30px";
+            div.style.backgroundColor = "#fff";
+            div.style.border = "1px solid #ccc";
+            div.style.borderRadius = "5px";
+            div.style.fontSize = "18px";
+            div.style.fontWeight = "bold";
+            div.style.zIndex = "9999";
+            div.innerText = "Processing...";
+            document.body.appendChild(div);
+        }
     } else {
-        downloadLink.href = 'data:' + dataType + ', ' + encodeURIComponent(tableHTML);
-        downloadLink.download = filename;
-        downloadLink.click();
+        if (overlayElement) {
+            overlayElement.remove();
+        }
+        if (loadingElement) {
+            loadingElement.remove();
+        }
     }
-
-    document.body.removeChild(downloadLink);
 }
