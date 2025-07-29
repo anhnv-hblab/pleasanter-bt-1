@@ -1,5 +1,5 @@
 $p.events.on_grid_load_arr.push(function () {
-    if (!location.pathname.endsWith('/index')) return;
+    if (!location.pathname.endsWith('/analy')) return;
     $("#MainCommands").append(
         $('<button id="button-chart" class="button button-icon button-neutral ui-button ui-corner-all ui-widget applied" type="button" data-icon="ui-icon-circle-arrow-w"><span class="ui-button-icon-space"> </span><span class="chart-button-text">Show Chart</span></button>')
     );
@@ -10,7 +10,7 @@ $p.events.on_grid_load_arr.push(function () {
 
         // Nếu container chưa tồn tại, tạo mới
         if ($container.length === 0) {
-            $('#MainForm').prepend('<div id="chart-container" style="display: none; width: 80%; margin: 20px auto;"><canvas id="myChart"></canvas></div>');
+            $('#Application').prepend('<div id="chart-container" style="display: none; width: 80%; margin: 20px auto;"><canvas id="myChart"></canvas></div>');
         }
 
         const $chartContainer = $('#chart-container');
