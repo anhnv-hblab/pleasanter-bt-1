@@ -10,7 +10,7 @@ $p.events.on_grid_load_arr.push(function () {
 
         // Nếu container chưa tồn tại, tạo mới
         if ($container.length === 0) {
-            $('#Application').prepend('<div id="chart-container" style="display: none; width: 80%; margin: 20px auto;"><canvas id="myChart"></canvas></div>');
+            $('#AnalyBody').prepend('<div id="chart-container" style="display: none; width: 80%; margin: 20px auto;"><canvas id="myChart"></canvas></div>');
         }
 
         const $chartContainer = $('#chart-container');
