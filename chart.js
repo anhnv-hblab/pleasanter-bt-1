@@ -1,4 +1,4 @@
-$p.events.on_grid_load_arr.push(function () {
+$p.events.on_analy_load = function () {
     if (!location.pathname.endsWith('/analy')) return;
     $("#MainCommands").append(
         $('<button id="button-chart" class="button button-icon button-neutral ui-button ui-corner-all ui-widget applied" type="button" data-icon="ui-icon-circle-arrow-w"><span class="ui-button-icon-space"> </span><span class="chart-button-text">Show Chart</span></button>')
@@ -95,4 +95,4 @@ $p.events.on_grid_load_arr.push(function () {
             $buttonText.text('Show Chart');
         }
     });
-});
+}
