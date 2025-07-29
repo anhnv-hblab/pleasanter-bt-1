@@ -1,16 +1,11 @@
-$p.events.on_grid_load_arr.push(function() {
+$p.events.on_grid_load_arr.push(function () {
     // Thêm nút Show/Hide Chart
     $("#MainCommands").append(
-        $('<button id="button-chart" class="button button-icon button-neutral ui-button ui-corner-all ui-widget applied" type="button" data-icon="ui-icon-circle-arrow-w"><span class="ui-button-icon-space"> </span>Hiển thị biểu đồ</button>')
+        $('<button id="button-chart" class="button button-icon button-neutral ui-button ui-corner-all ui-widget applied" type="button" data-icon="ui-icon-circle-arrow-w"><span class="ui-button-icon-space"> </span><span class="chart-button-text">Show Chart</span></button>')
     );
 
-    // Biến kiểm tra trạng thái
-    let chartVisible = false;
-    let chartRendered = false;
-
     // Sự kiện click
-
-    $('#button-chart').on('click', async function() {
+    $('#button-chart').on('click', async function () {
         const $container = $('#chart-container');
 
         // Nếu container chưa tồn tại, tạo mới
@@ -18,9 +13,12 @@ $p.events.on_grid_load_arr.push(function() {
             $('#MainForm').prepend('<div id="chart-container" style="display: none; width: 80%; margin: 20px auto;"><canvas id="myChart"></canvas></div>');
         }
 
+        const $chartContainer = $('#chart-container');
+        const $buttonText = $('#button-chart .chart-button-text');
+
         // Nếu đang ẩn → hiển thị và vẽ biểu đồ
-        if ($('#chart-container').is(':hidden')) {
-            $('#chart-container').slideDown(400, async function() {
+        if ($chartContainer.is(':hidden')) {
+            $chartContainer.slideDown(400, async function () {
                 // Xóa biểu đồ cũ nếu có
                 if (window.myChart instanceof Chart) {
                     window.myChart.destroy();
@@ -68,7 +66,7 @@ $p.events.on_grid_load_arr.push(function() {
                         },
                         options: {
                             responsive: true,
-                            maintainAspectRatio: false, // Thêm nếu cần chiều cao linh hoạt
+                            maintainAspectRatio: false,
                             plugins: {
                                 legend: {
                                     position: 'bottom',
@@ -80,16 +78,21 @@ $p.events.on_grid_load_arr.push(function() {
                             }
                         }
                     });
+
+                    // Cập nhật text nút
+                    $buttonText.text('Hide Chart');
                 } catch (err) {
                     console.error("Lỗi lấy dữ liệu hoặc vẽ biểu đồ:", err);
                 }
             });
+
             const target = document.getElementById('MainForm');
             if (target) {
                 target.scrollIntoView({ behavior: 'smooth' });
             }
         } else {
-            $('#chart-container').slideUp(300);
+            $chartContainer.slideUp(300);
+            $buttonText.text('Show Chart');
         }
     });
 });
